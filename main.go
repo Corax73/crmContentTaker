@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crmSender/customTheme"
 	"crmSender/sender"
 
 	"fyne.io/fyne/v2"
@@ -11,6 +12,7 @@ import (
 
 func main() {
 	app := app.New()
+	app.Settings().SetTheme(customTheme.NewCustomTheme())
 	window := app.NewWindow("Crm sender")
 
 	btnExit := widget.NewButton("Exit", func() {
@@ -35,14 +37,15 @@ func main() {
 
 	sender.SelectMethod = sender.GetSelectMethod()
 	sender.SendBtn = sender.SendBtnHandler()
+	sender.ClearParametersBtn = sender.ClearParametersBtnHandler()
 
-	content := container.NewGridWithRows(2,
-		container.NewGridWithColumns(
-			3,
-			container.NewGridWithRows(4, sender.InputRequest, sender.InputKey, sender.InputDomain, sender.SelectMethod),
-			container.NewGridWithRows(2, sender.Params, sender.SendBtn),
-			container.NewGridWithRows(1, sender.ErrDisplay),
-		),
+	content := container.NewGridWithRows(
+		6,
+		container.NewGridWithColumns(1,sender.InputRequest),
+		container.NewGridWithColumns(2, sender.InputKey, sender.InputDomain),
+		container.NewGridWithColumns(1,sender.Params),
+		container.NewGridWithColumns(3, sender.SelectMethod, sender.SendBtn, sender.ClearParametersBtn),
+		container.NewGridWithColumns(1,sender.ErrDisplay),
 		btnExit,
 	)
 	window.SetContent(content)

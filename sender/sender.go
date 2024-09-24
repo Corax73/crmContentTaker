@@ -21,11 +21,15 @@ type State struct {
 	Window       *fyne.Window
 }
 
+func (state *State) ResetState() {
+	state.Method, state.Data = "", ""
+}
+
 type Sender struct {
 	State
 	InputRequest, InputKey, InputDomain, ErrDisplay, Params *widget.Entry
-	SendBtn                                              *widget.Button
-	SelectMethod                                         *widget.Select
+	SendBtn, ClearParametersBtn                             *widget.Button
+	SelectMethod                                            *widget.Select
 }
 
 func (sender *Sender) GetSelectMethod() *widget.Select {
@@ -127,4 +131,16 @@ func (sender *Sender) MakeGetParams(data *bytes.Buffer) string {
 	strParams = strings.Replace(strParams, ":", "=", -1)
 	strParams = strings.Replace(strParams, ",", "&", -1)
 	return strParams
+}
+
+func (sender *Sender) ClearParametersBtnHandler() *widget.Button {
+	return widget.NewButton("Clear all parameters", func() {
+		sender.InputRequest.SetText("")
+		sender.InputKey.SetText("")
+		sender.InputDomain.SetText("")
+		sender.ErrDisplay.SetText("")
+		sender.Params.SetText("")
+		sender.SelectMethod.Selected = "Select method"
+		sender.ResetState()
+	})
 }
